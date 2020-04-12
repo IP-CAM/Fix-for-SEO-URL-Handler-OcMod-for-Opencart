@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<modification>
+  <name>Fix for SEO URL handler</name>
+  <code>seo-url-fix</code>
+    <id>seo-url-fix</id>
+    <version>1.0</version>
+    <vqmver required="true">2.6.0</vqmver>
+    <author>Joe Rothrock</author>
+    <link>https://github.com/akmjoe</link>
+
+    <file path="catalog/controller/startup/seo_url.php">
+        <operation error="skip" info="To set unknown parameters by seo table in url redirect">
+            <search><![CDATA[$this->request->get['route'] = $query->row['query'];]]></search>
+            <add position="replace"><![CDATA[$this->request->get[$url[0]] = $url[1];]]></add>
+        </operation>
+        <operation error="skip" info="To add support for route in url redirect">
+            <search><![CDATA[if ($query->num_rows) {]]></search>
+            <add position="after"><![CDATA[					if(!strpos($query->row['query'], '=')) {
+						// assume route
+						$this->request->get['route'] = $query->row['query'];
+						continue;
+					}
+]]></add>
+        </operation>
+        <operation error="skip" info="To add support for route in SEO url rewrite">
+            <search index="1"><![CDATA[unset($data[$key]);]]></search>
+            <add position="after"><![CDATA[} elseif($key == 'route') {
+					// look for route in table
+					$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "seo_url WHERE `query` = '" . $this->db->escape($data['route']) . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
+
+					if ($query->num_rows && $query->row['keyword']) {
+						$url .= '/' . $query->row['keyword'];
+
+						unset($data[$key]);
+					}
+				} 
+			} elseif($url) {
+				// look for key => value pair in table
+				$query = $this->db->query("SELECT * FROM " . DB_PREFIX . "seo_url WHERE `query` = '" . $this->db->escape($key . '=' . (int)$value) . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
+
+				if ($query->num_rows && $query->row['keyword']) {
+					$url .= '/' . $query->row['keyword'];
+
+					unset($data[$key]);]]></add>
+        </operation>
+	</file>
+
+</modification>
