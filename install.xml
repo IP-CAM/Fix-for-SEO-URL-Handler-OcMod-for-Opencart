@@ -18,6 +18,7 @@
             <add position="after"><![CDATA[					if(!strpos($query->row['query'], '=')) {
 						// assume route
 						$this->request->get['route'] = $query->row['query'];
+						$_GET['route'] = $query->row['query'];
 						continue;
 					}
 ]]></add>
@@ -43,6 +44,46 @@
 
 					unset($data[$key]);]]></add>
         </operation>
-	</file>
+    </file>
+    <file path="system/engine/loader.php">
+        <operation error="skip" info="To add non-seo route to data">
+            <search><![CDATA[function view]]></search>
+            <add position="after"><![CDATA[$data['current_route'] = $_GET['route'];]]></add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/common/header.twig">
+        <operation error="skip" info="To set javascript variable with route">
+            <search><![CDATA[<script src="catalog/view/javascript/common.js" type="text/javascript"></script>]]></search>
+            <add position="after"><![CDATA[<script type="text/javascript">
+    // set javascript variable with route
+    current_route = '{{ current_route }}';
+    // re-define getURLVar function with override
+function getURLVar(key) {
+	var value = [];
+
+	var query = String(document.location).split('?');
+	if (query[1]) {
+		var part = query[1].split('&');
+
+		for (i = 0; i < part.length; i++) {
+			var data = part[i].split('=');
+
+			if (data[0] && data[1]) {
+				value[data[0]] = data[1];
+			}
+		}
+
+		if (value[key]) {
+			return value[key];
+		} else {
+			return '';
+		}
+	} else if (current_route && key == 'route') {// seo enabled - use current_route instead
+            return current_route;
+        }
+}
+</script>]]></add>
+        </operation>
+    </file>
 
 </modification>
