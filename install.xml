@@ -48,7 +48,9 @@
     <file path="system/engine/loader.php">
         <operation error="skip" info="To add non-seo route to data">
             <search><![CDATA[function view]]></search>
-            <add position="after"><![CDATA[$data['current_route'] = $_GET['route'];]]></add>
+            <add position="after"><![CDATA[if(isset($_GET['route'])) {
+    $data['current_route'] = $_GET['route'];
+}]]></add>
         </operation>
     </file>
     <file path="catalog/view/theme/*/template/common/header.twig">
