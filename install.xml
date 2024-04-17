@@ -9,6 +9,17 @@
     <link>https://github.com/akmjoe</link>
 
     <file path="catalog/controller/startup/seo_url.php">
+        <operation error="skip" info="To get keyword from seo alias">
+            <search><![CDATA[foreach ($parts as $part) {]]></search>
+            <add position="after"><![CDATA[
+                if($this->config->get('module_seo_status')) {
+                $query = $this->db->query("SELECT keyword FROM " . DB_PREFIX . "seo_alias WHERE alias = '" . $this->db->escape($part) . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "'");
+                if($query->num_rows) {
+                    $part = $query->row['keyword'];
+                }
+                }
+]]></add>
+        </operation>
         <operation error="skip" info="To set unknown parameters by seo table in url redirect">
             <search><![CDATA[$this->request->get['route'] = $query->row['query'];]]></search>
             <add position="replace"><![CDATA[$this->request->get[$url[0]] = $url[1];]]></add>
@@ -87,5 +98,22 @@ function getURLVar(key) {
 </script>]]></add>
         </operation>
     </file>
-
+    <file path="admin/view/template/catalog/*_form.twig">
+        <operation error="skip" info="To add aliases in SEO section">
+            <search><![CDATA[{% if error_keyword[store.store_id][language.language_id] %}]]></search>
+            <add position="before"><![CDATA[
+{% for alias in product_seo_alias[store.store_id][language.language_id] %}
+<div class="input-group">
+    <span class="input-group-addon">{{ text_alias }}</span>
+    <input type="text" name="product_seo_alias[{{ store.store_id }}][{{ language.language_id }}][{{ alias.seo_alias_id }}]" value="{{ alias.alias }}" placeholder="{{ entry_keyword }}" class="form-control" />
+</div>
+{% endfor %}
+<div class="input-group">
+    <span class="input-group-addon">{{ text_alias }}</span>
+    <input type="text" name="product_seo_alias[{{ store.store_id }}][{{ language.language_id }}][0]" value="" placeholder="{{ entry_keyword }}" class="form-control" />
+</div>
+]]>
+            </add>
+        </operation>
+    </file>   
 </modification>
