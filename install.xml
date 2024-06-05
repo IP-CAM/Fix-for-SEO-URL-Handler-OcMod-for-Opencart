@@ -20,6 +20,19 @@
                 }
 ]]></add>
         </operation>
+        <operation error="skip" info="Zencart compatible product diagram highlight">
+            <search><![CDATA[foreach ($parts as $part) {]]></search>
+            <add position="before"><![CDATA[
+                        for($i = 0;$i<=count($parts);$i++) {
+				$this->log->write($parts[$i]);
+				if($parts[$i] == 'products_diagram_highlight') {
+					$this->request->get['link_id'] = $parts[$i+1];
+					unset($parts[$i+1]);
+					unset($parts[$i]);
+				}
+			}
+]]></add>
+        </operation>
         <operation error="skip" info="To set unknown parameters by seo table in url redirect">
             <search><![CDATA[$this->request->get['route'] = $query->row['query'];]]></search>
             <add position="replace"><![CDATA[$this->request->get[$url[0]] = $url[1];]]></add>

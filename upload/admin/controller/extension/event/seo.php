@@ -54,7 +54,7 @@ class controllerExtensionEventSeo extends Controller {
 		$this->language->load('extension/module/seo_event');
 		$this->load->model('extension/module/seo');
 		$this->load->model('design/seo_url');
-		$this->log->write($temp);
+		//$this->log->write($temp);
 		foreach($temp['product_seo_alias'] as $store_id => $value) {
 			foreach($value as $language_id => $aliases) {
 				foreach($aliases as $id => $alias) {
