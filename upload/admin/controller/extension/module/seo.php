@@ -84,6 +84,7 @@ class ControllerExtensionModuleSeo extends Controller {
 		$this->model_setting_event->addEvent('seo', 'admin/view/catalog/category_form/before', 'extension/event/seo/view');
 		$this->model_setting_event->addEvent('seo', 'admin/view/catalog/information_form/before', 'extension/event/seo/view');
 		$this->model_setting_event->addEvent('seo', 'admin/view/catalog/resource_form/before', 'extension/event/seo/view');
+		$this->model_setting_event->addEvent('seo', 'admin/view/catalog/manufacturer_form/before', 'extension/event/seo/view');
 	}
 	
 	public function uninstall() {
