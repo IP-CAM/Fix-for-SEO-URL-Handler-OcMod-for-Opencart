@@ -16,7 +16,27 @@ class controllerExtensionEventSeo extends Controller {
 				$data['product_seo_alias'][$store][$language] = $this->model_extension_module_seo->getAliases($keyword,$store,$language);
 			}
 		}
-		//$this->log->write($data);
+		foreach($data['category_seo_url'] as $store => $value) {
+			foreach($value as $language => $keyword) {
+				$data['product_seo_alias'][$store][$language] = $this->model_extension_module_seo->getAliases($keyword,$store,$language);
+			}
+		}
+		foreach($data['manufacturer_seo_url'] as $store => $value) {
+			foreach($value as $language => $keyword) {
+				$data['product_seo_alias'][$store][$language] = $this->model_extension_module_seo->getAliases($keyword,$store,$language);
+			}
+		}
+		foreach($data['information_seo_url'] as $store => $value) {
+			foreach($value as $language => $keyword) {
+				$data['product_seo_alias'][$store][$language] = $this->model_extension_module_seo->getAliases($keyword,$store,$language);
+			}
+		}
+		foreach($data['resource_seo_url'] as $store => $value) {
+			foreach($value as $language => $keyword) {
+				$data['product_seo_alias'][$store][$language] = $this->model_extension_module_seo->getAliases($keyword,$store,$language);
+			}
+		}
+		$this->log->write($data);
 	}
 	
 	public function save(&$route, &$data, &$output = null) {// triggered after save form
@@ -34,11 +54,29 @@ class controllerExtensionEventSeo extends Controller {
 		$this->language->load('extension/module/seo_event');
 		$this->load->model('extension/module/seo');
 		$this->load->model('design/seo_url');
+		$this->log->write($temp);
 		foreach($temp['product_seo_alias'] as $store_id => $value) {
 			foreach($value as $language_id => $aliases) {
 				foreach($aliases as $id => $alias) {
 					$alias = trim($alias);
-					$keyword = trim($temp['product_seo_url'][$store_id][$language_id]);
+					switch(true) {
+						case isset($temp['product_seo_url']):
+							$keyword = trim($temp['product_seo_url'][$store_id][$language_id]);
+							break;
+						case isset($temp['manufacturer_seo_url']):
+							$keyword = trim($temp['manufacturer_seo_url'][$store_id][$language_id]);
+							break;
+						case isset($temp['category_seo_url']):
+							$keyword = trim($temp['category_seo_url'][$store_id][$language_id]);
+							break;
+						case isset($temp['information_seo_url']):
+							$keyword = trim($temp['information_seo_url'][$store_id][$language_id]);
+							break;
+						case isset($temp['resource_seo_url']):
+							$keyword = trim($temp['resource_seo_url'][$store_id][$language_id]);
+							break;
+						
+					}
 					if(!strlen($alias)) {
 						$this->model_extension_module_seo->deleteAlias($id);
 					} else {
