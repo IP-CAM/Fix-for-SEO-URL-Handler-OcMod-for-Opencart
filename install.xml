@@ -24,8 +24,8 @@
             <search><![CDATA[foreach ($parts as $part) {]]></search>
             <add position="before"><![CDATA[
                         for($i = 0;$i<=count($parts);$i++) {
-				$this->log->write($parts[$i]);
-				if($parts[$i] == 'products_diagram_highlight') {
+				//$this->log->write($parts[$i]);
+				if(isset($parts[$i]) && $parts[$i] == 'products_diagram_highlight') {
 					$this->request->get['link_id'] = $parts[$i+1];
 					unset($parts[$i+1]);
 					unset($parts[$i]);
