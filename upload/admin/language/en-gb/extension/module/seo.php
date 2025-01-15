@@ -12,6 +12,7 @@ $_['text_alias']	= 'Alias';
 
 // Entry
 $_['entry_status']	= 'Status';
+$_['entry_debug']      = 'Debug Log';
 
 // Help
 $_['help_seo']			= 'When enabled, will redirect secondary urls to the primary. The page canonical tag will always be the primary.';
