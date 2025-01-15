@@ -49,7 +49,12 @@ class ControllerExtensionModuleSeo extends Controller {
 		} else {
 			$data['module_seo_status'] = $this->config->get('module_seo_status');
 		}
-
+		
+		if (isset($this->request->post['module_seo_debug'])) {
+			$data['module_seo_debug'] = $this->request->post['module_seo_debug'];
+		} else {
+			$data['module_seo_debug'] = $this->config->get('module_seo_debug');
+		}
 		
 		$data['header'] = $this->load->controller('common/header');
 		$data['column_left'] = $this->load->controller('common/column_left');

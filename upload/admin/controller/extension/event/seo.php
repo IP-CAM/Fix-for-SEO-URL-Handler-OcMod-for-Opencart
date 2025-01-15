@@ -11,32 +11,44 @@ class controllerExtensionEventSeo extends Controller {
 		
 		$this->load->model('extension/module/seo');
 		// get SEO aliases
-		foreach($data['product_seo_url'] as $store => $value) {
-			foreach($value as $language => $keyword) {
-				$data['product_seo_alias'][$store][$language] = $this->model_extension_module_seo->getAliases($keyword,$store,$language);
+		if(isset($data['product_seo_url'])) {
+			foreach($data['product_seo_url'] as $store => $value) {
+				foreach($value as $language => $keyword) {
+					$data['product_seo_alias'][$store][$language] = $this->model_extension_module_seo->getAliases($keyword,$store,$language);
+				}
 			}
 		}
-		foreach($data['category_seo_url'] as $store => $value) {
-			foreach($value as $language => $keyword) {
-				$data['product_seo_alias'][$store][$language] = $this->model_extension_module_seo->getAliases($keyword,$store,$language);
+		if(isset($data['category_seo_url'])) {
+			foreach($data['category_seo_url'] as $store => $value) {
+				foreach($value as $language => $keyword) {
+					$data['product_seo_alias'][$store][$language] = $this->model_extension_module_seo->getAliases($keyword,$store,$language);
+				}
 			}
 		}
-		foreach($data['manufacturer_seo_url'] as $store => $value) {
-			foreach($value as $language => $keyword) {
-				$data['product_seo_alias'][$store][$language] = $this->model_extension_module_seo->getAliases($keyword,$store,$language);
+		if(isset($data['manufacturer_seo_url'])) {
+			foreach($data['manufacturer_seo_url'] as $store => $value) {
+				foreach($value as $language => $keyword) {
+					$data['product_seo_alias'][$store][$language] = $this->model_extension_module_seo->getAliases($keyword,$store,$language);
+				}
 			}
 		}
-		foreach($data['information_seo_url'] as $store => $value) {
-			foreach($value as $language => $keyword) {
-				$data['product_seo_alias'][$store][$language] = $this->model_extension_module_seo->getAliases($keyword,$store,$language);
+		if(isset($data['information_seo_url'])) {
+			foreach($data['information_seo_url'] as $store => $value) {
+				foreach($value as $language => $keyword) {
+					$data['product_seo_alias'][$store][$language] = $this->model_extension_module_seo->getAliases($keyword,$store,$language);
+				}
 			}
 		}
-		foreach($data['resource_seo_url'] as $store => $value) {
-			foreach($value as $language => $keyword) {
-				$data['product_seo_alias'][$store][$language] = $this->model_extension_module_seo->getAliases($keyword,$store,$language);
+		if(isset($data['resource_seo_url'])) {
+			foreach($data['resource_seo_url'] as $store => $value) {
+				foreach($value as $language => $keyword) {
+					$data['product_seo_alias'][$store][$language] = $this->model_extension_module_seo->getAliases($keyword,$store,$language);
+				}
 			}
 		}
-		$this->log->write($data);
+		if($this->config->get('module_seo_debug')) {
+			$this->log->write($data);
+		}
 	}
 	
 	public function save(&$route, &$data, &$output = null) {// triggered after save form
@@ -82,10 +94,14 @@ class controllerExtensionEventSeo extends Controller {
 					} else {
 						if(!strlen($keyword)) {
 							$this->language->set('text_success', $this->language->get('error_keyword'));
-							$this->log->write($this->language->get('error_keyword'));
+							if($this->config->get('module_seo_debug')) {
+								$this->log->write($this->language->get('error_keyword'));
+							}
 						} elseif($this->model_extension_module_seo->checkAlias($alias, $store_id, $language_id)) {
 							$this->language->set('text_success', sprintf($this->language->get('error_duplicate'),$alias));
-							$this->log->write(sprintf($this->language->get('error_duplicate'),$alias));
+							if($this->config->get('module_seo_debug')) {
+								$this->log->write(sprintf($this->language->get('error_duplicate'),$alias));
+							}
 						} else {
 							$this->model_extension_module_seo->saveAlias($keyword, $alias, $store_id, $language_id);
 						}
